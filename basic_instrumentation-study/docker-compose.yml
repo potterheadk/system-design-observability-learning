@@ -41,3 +41,14 @@ services:
       - PROMETHEUS_URL=http://prometheus:9090
     depends_on:
       - prometheus
+
+  ai-agent:
+    build: ./ai-agent
+    ports:
+      - "8090:8000"
+    environment:
+      - OBSERVABILITY_API_URL=http://observability-api:8000/graphql
+      - LLM_PROVIDER=gemini  # Change to 'ollama' later
+      - GEMINI_API_KEY=${GEMINI_API_KEY} # We will set this in .env
+    depends_on:
+      - observability-api
