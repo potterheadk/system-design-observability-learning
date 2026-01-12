@@ -1,0 +1,6 @@
+fastapi
+uvicorn
+requests
+prometheus-fastapi-instrumentator
+structlog
+strawberry-graphql
