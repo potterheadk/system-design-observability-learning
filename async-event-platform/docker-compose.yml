@@ -1,0 +1,22 @@
+services:
+  api:
+    build: ./blocking-api
+    ports:
+      - "8001:8000"
+    environment:
+      - REDIS_HOST=redis
+    depends_on:
+      - redis
+
+  # NEW SERVICE
+  worker:
+    build: ./worker
+    environment:
+      - REDIS_HOST=redis
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
