@@ -130,4 +130,3 @@ Throughout the project, we focused on the **RED** method for microservices:
 3.  **D - Duration:** How long did they take?
 
 These are the three numbers that matter most when keeping a system alive.
-```
