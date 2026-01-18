@@ -54,7 +54,7 @@ Phases:
 - [Phase 3 – Worker Architecture](./2_async-event-platform/phase_3.md)
 - [Phase 4 – Reliability](./2_async-event-platform/phase_4.md)
 - [Phase 5 – Scaling](./2_async-event-platform/phase_5.md)
-- [Phase 6 - websockets](./phase_6-Websockets.md)
+- [Phase 6 - websockets](./2_async-event-platform/phase_6-Websockets.md)
 
 ---
 
