@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>⚡ Live Job Tracker</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; }
+        .box { border: 1px solid #ddd; padding: 20px; margin-top: 20px; border-radius: 8px; }
+        .status { font-weight: bold; color: blue; }
+        .done { color: green; }
+        .failed { color: red; }
+    </style>
+</head>
+<body>
+    <h2>🚀 Async Task Runner</h2>
+    <input type="text" id="taskInput" placeholder="Enter task (e.g., 'Analyze Data')">
+    <button onclick="startJob()">Start Job</button>
+
+    <div id="dashboard" class="box" style="display:none;">
+        <h3>Job Monitor: <span id="jobIdDisplay"></span></h3>
+        <p>Status: <span id="statusDisplay" class="status">Waiting...</span></p>
+        <pre id="resultDisplay">...</pre>
+    </div>
+
+    <script>
+        async function startJob() {
+            const text = document.getElementById('taskInput').value;
+            
+            // 1. Submit the Job (Standard HTTP)
+            const response = await fetch('http://localhost:8001/analyze', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({text: text})
+            });
+            const data = await response.json();
+            const jobId = data.job_id;
+
+            // Show UI
+            document.getElementById('dashboard').style.display = 'block';
+            document.getElementById('jobIdDisplay').innerText = jobId;
+            document.getElementById('statusDisplay').innerText = "QUEUED (Connecting WS...)";
+
+            // 2. Open the Live Line (WebSocket)
+            connectWebSocket(jobId);
+        }
+
+        function connectWebSocket(jobId) {
+            const ws = new WebSocket(`ws://localhost:8001/ws/job/${jobId}`);
+
+            ws.onopen = () => {
+                console.log("Connected to Stream");
+            };
+
+            ws.onmessage = (event) => {
+                // 3. Receive Real-Time Updates
+                console.log("Update received:", event.data);
+                const update = JSON.parse(event.data);
+                
+                const statusSpan = document.getElementById('statusDisplay');
+                statusSpan.innerText = update.status.toUpperCase();
+
+                if (update.status === 'completed') {
+                    statusSpan.className = "status done";
+                    document.getElementById('resultDisplay').innerText = update.result;
+                    ws.close(); // We are done!
+                } else if (update.status === 'failed') {
+                    statusSpan.className = "status failed";
+                    document.getElementById('resultDisplay').innerText = update.error;
+                    ws.close();
+                }
+            };
+        }
+    </script>
+</body>
+</html>

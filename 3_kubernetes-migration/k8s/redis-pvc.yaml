@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: redis-data-claim
+spec:
+  accessModes:
+    - ReadWriteOnce # Only one pod can use this at a time (standard for DBs)
+  resources:
+    requests:
+      storage: 1Gi  # 1 Gigabyte of space
