@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+      - name: redis
+        image: redis:7-alpine
+        # 1. Mount the volume inside the container
+        volumeMounts:
+        - name: redis-storage
+          mountPath: /data
+        # 2. Tell Redis to write to disk immediately (AOF mode)
+        args: ["redis-server", "--appendonly", "yes"]
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "100m"
+        ports:
+        - containerPort: 6379
+      # 3. Define the Volume (Connect to the PVC)
+      volumes:
+      - name: redis-storage
+        persistentVolumeClaim:
+          claimName: redis-data-claim
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis
+spec:
+  selector:
+    app: redis
+  ports:
+    - port: 6379
+      targetPort: 6379

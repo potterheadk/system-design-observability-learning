@@ -1,0 +1,17 @@
+
+# Configuration for the API
+api:
+  replicas: 1
+  image:
+    repository: my-api
+    tag: v3
+
+worker:
+  replicas: 1
+  image:
+    repository: my-worker
+    tag: v3
+
+# Ingress configuration
+ingress:
+  host: async.local
