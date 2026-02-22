@@ -42,7 +42,7 @@ kubectl get nodes
 ## 🛠️ Step 2: The "Image" Trick
 
 **The Problem:**
-K8s usually tries to pull images from Docker Hub. Your images (`async-event-platform-api`) are local. K8s can't see them.
+K8s usually tries to pull images from Docker Hub. Your images (`blocking-api and worker`) are local. K8s can't see them.
 
 **The Arch Linux Power Move:**
 We will point your terminal's Docker client to talk to **Minikube's Docker Daemon**.
@@ -57,7 +57,7 @@ eval $(minikube -p minikube docker-env)
 Run `docker ps`. You should see K8s internal containers (etcd, coredns), NOT your usual desktop containers.
 
 **Now, Build Your Images (Inside Minikube):**
-Go to your `async-event-platform` folder:
+Go to your `3_kubernetes-migration` folder:
 ```bash
 # Build API
 docker build -t my-api:v1 ./blocking-api
