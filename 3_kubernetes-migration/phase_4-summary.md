@@ -1,5 +1,3 @@
----
-
 # 🏆 Project 3 Summary: The Kubernetes Migration
 
 **Status:** Completed  
